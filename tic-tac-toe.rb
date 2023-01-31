@@ -1,12 +1,31 @@
 require 'pry-byebug'
 require_relative 'game_chatter'
 
+class Board
+  include BoardMappings
+  def initialize
+    @board = BOARD
+  end
+
+  def display_board
+    border = "\n---+---+---\n"
+    puts "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
+  end
+
+  def board
+    @board
+  end
+end
+
+
 class GamePlay
   include GameNarration
   include BoardMappings
 
   def initialize
-    @board = BOARD
+    @new_board = Board.new
+    @board = Board.new
+    # @board = BOARD
   end
 
   def check_for_winner(player)
@@ -67,12 +86,17 @@ class GamePlay
   end
 
   def display_board
-    border = "\n---+---+---\n"
-    puts "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
+    @new_board.display_board
+    # border = "\n---+---+---\n"
+    # puts "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
   end
 
+  # def board
+  #   @new_board.board
+  # end
 end
 
 game = GamePlay.new
-puts game.start_new_game
+puts game.display_board
+# puts game.start_new_game
 # puts game.check_for_winner("X")
