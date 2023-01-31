@@ -9,7 +9,6 @@ class GamePlay
     @board = BOARD
   end
 
-
   def check_for_winner(player)
     spots = []
     @board.each do |spot, pl|
@@ -17,16 +16,13 @@ class GamePlay
         spots << spot
       end
     end
-
     WINNING_COMBOS.map { |combo| return player if (combo - spots).empty? }
   end
-
 
   def alternate_player_turns
     turn_counter = 0
     while turn_counter < 9
       turn_counter.even? ? player_turn("X") : player_turn("O")
-      # turn_counter.even? ? player_one_turn("X") : player_two_turn("O")
       turn_counter += 1
     end
     end_game("draw")
@@ -34,24 +30,19 @@ class GamePlay
 
   def player_turn(player)
     other_player = (player == "X" ? "O" : "X")
-
     puts "Player #{player}, your move: "
     choice = gets.chomp.to_i
 
     case
     when already_played(choice)
-      display_already_played_message
+      already_played_message
       player_turn(player)
-      # player_one_turn("X")
     when invalid_choices(choice)
-      invalid_response
+      invalid_move_message
       player_turn(other_player)
-      # player_two_turn("O")
     else
       @board[choice] = player
-      # @board[choice] = "X"
     end
-
     end_players_turn(player)
   end
   
@@ -84,4 +75,4 @@ end
 
 game = GamePlay.new
 puts game.start_new_game
-puts game.check_for_winner("X")
+# puts game.check_for_winner("X")

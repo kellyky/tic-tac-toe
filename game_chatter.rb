@@ -6,11 +6,11 @@ module GameNarration
     return if !to_play?
   end
 
-  def display_already_played_message
+  def already_played_message
     puts "Ope, that one's already taken. Choose again."
   end
 
-  def invalid_resonse_message
+  def invalid_move_message
     puts "Hm, not sure I understand... Please choose a number, 1 - 9."
   end
 
