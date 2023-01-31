@@ -1,4 +1,4 @@
-module GameChatter
+module GameNarration
 
   def start_game_narration
     start_game
@@ -26,7 +26,7 @@ module GameChatter
 
     case response
     when 'yes'
-      puts "Woohoo! Preparing a new board..."
+      puts "Woohoo! Preparing a new board... 'X' goes first."
     when 'no'
       puts "Alrighty - bye then!"
       return
@@ -55,7 +55,7 @@ module GameChatter
   end
 end
 
-module Board
+module BoardMappings
   BOARD = {
       1 => 1,
       2 => 2,
@@ -67,9 +67,7 @@ module Board
       8 => 8,
       9 => 9
     }
-end
 
-module WinningCombos
   WINNING_COMBOS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], 
                     [1, 4, 7], [2, 5, 8], [3, 6, 9], 
                     [1, 5, 9], [3, 5, 7]]
