@@ -3,40 +3,52 @@ require_relative 'game_chatter'
 
 class GamePlay
   include GameChatter
-  include Moves
+  include Board
   include WinningCombos
 
   def initialize
-    @moves = MOVES
+    @board = BOARD
   end
+
 
   def check_for_winner(player)
     spots = []
-    @moves.each do |spot, pl|
+    @board.each do |spot, pl|
       if pl == player
         spots << spot
       end
     end
 
     spots
+
+    WINNING_COMBOS.each do |combo| 
+      diff = combo - spots
+      if diff.empty?
+        return "We have a winnder - player #{player} wins!!!"
+      end
+    end
   end
 
   def player_turns
     turn_counter = 0
 
     while turn_counter < 9
+      binding.pry
       if turn_counter.even?
         player_one_turn
-        puts MOVES
+        display_board
+        check_for_winner("X")
         sleep (0.5)
       else
         player_two_turn
-        puts MOVES
+        display_board
+        check_for_winner("O")
         sleep (0.5)
       end
       turn_counter += 1
     end
   end 
+
 
   def player_one_turn
     puts "Player 1, your move: "
@@ -50,11 +62,8 @@ class GamePlay
       invalid_response
       player_two_turn
     else
-      @moves[choice] = "X"
-    end
-
-    if check_for_winner('X')
-      return "X wins!"
+      @board[choice] = "X"
+      # player_ones_moves << choice
     end
   end
 
@@ -70,33 +79,33 @@ class GamePlay
       invalid_response
       player_two_turn
     else
-      @moves[choice] = "O"
-    end
-
-    if check_for_winner('O')
-      return "O wins!"
+      @board[choice] = "O"
+      # player_twos_moves << choice
     end
   end
     
 
   def invalid_choices(move)
-    !@moves.keys.include?(move)
+    !@board.keys.include?(move)
   end  
 
   def already_played(move)
-    !@moves.values.include?(move)
+    !@board.values.include?(move)
   end
 
   def start_new_game
+    display_board
     start_game_narration
     player_turns
   end
-  
-  def update_moves_player_one(moves)
-    MOVES[choice] = "X"
+
+  def display_board
+    border = "\n---+---+---\n"
+    puts "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
   end
 
 end
 
 game = GamePlay.new
 puts game.start_new_game
+puts game.check_for_winner("X")
