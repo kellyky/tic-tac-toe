@@ -1,85 +1,16 @@
 module GameChatter
+  # WINNING_COMBOS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], 
+  #                   [1, 4, 7], [2, 5, 8], [3, 6, 9], 
+  #                   [1, 5, 9], [3, 5, 7]]
 
-  
-  MOVES = {
-      1 => 1,
-      2 => 2,
-      3 => 3,
-      4 => 4,
-      5 => 5,
-      6 => 6,
-      7 => 7,
-      8 => 8,
-      9 => 9
-    }
-
-  def play_dialogue
+  def start_game_narration
     start_game
     sleep (0.5)
-    to_play?
-    sleep (0.5)
-    player_turns
+    return if !to_play?
   end
 
-  def player_turns
-    turn_counter = 0
-
-    while turn_counter < 9
-      if turn_counter.even?
-        player_one_turn
-        puts MOVES
-      else 
-        player_two_turn
-        puts MOVES
-      end
-      turn_counter += 1
-    end
-  end
-
-  def player_two_turn
-    puts "Player 2, your move: "
-    choice = gets.chomp.to_i
-
-    case
-    when already_played(choice)
-      puts "Ope, that one's already taken. Choose again."
-      player_two_turn
-    when invalid_choices(choice)
-      invalid_response
-      player_two_turn
-    else
-      MOVES[choice] = "O"
-      MOVES
-    end
-  end
-  
-  def player_one_turn
-    puts "Player 1, your move: "
-    choice = gets.chomp.to_i
-
-    case
-    when already_played(choice)
-      puts "Ope, that one's already taken. Choose again."
-      player_one_turn
-    when invalid_choices(choice)
-      invalid_response
-      player_one_turn
-    else
-      MOVES[choice] = "X"
-      MOVES
-    end
-  end
-
-  def invalid_response
-    puts "Gahhhh. Not sure what to do with that one. Please choose an available space."
-  end
-
-  def already_played(move)
-    !MOVES.values.include?(move)
-  end
-
-  def invalid_choices(move)
-    !MOVES.keys.include?(move)
+  def display_already_played_message
+    puts "Ope, that one's already taken. Choose again."
   end
 
   def to_play?
@@ -97,6 +28,7 @@ module GameChatter
       puts "Woohoo! Preparing a new board..."
     when 'no'
       puts "Alrighty - bye then!"
+      return
     else
       puts "Hm, not sure I understand... Please type 'y' for 'yes' or 'n' for 'no'."
       sleep(0.5)
@@ -109,4 +41,24 @@ module GameChatter
     sleep (0.5)
     puts "Would you like to play?"
   end
+end
+
+module Moves
+    MOVES = {
+      1 => 1,
+      2 => 2,
+      3 => 3,
+      4 => 4,
+      5 => 5,
+      6 => 6,
+      7 => 7,
+      8 => 8,
+      9 => 9
+    }
+end
+
+module WinningCombos
+  WINNING_COMBOS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], 
+                    [1, 4, 7], [2, 5, 8], [3, 6, 9], 
+                    [1, 5, 9], [3, 5, 7]]
 end
