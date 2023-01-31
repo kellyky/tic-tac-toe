@@ -1,41 +1,13 @@
 require 'pry-byebug'
 require_relative 'game_chatter'
 
-class TicTacToeBoard
-  include GameChatter
-  include Moves
-  include WinningCombos
-
-  def initialize(moves, *spaces)
-    # binding.pry
-    @moves = MOVES
-
-    @board = "\n #{@moves[1]} | #{@moves[2]} | #{@moves[3]} #{border} #{@moves[4]} | #{@moves[5]} | #{@moves[6]} #{border} #{@moves[7]} | #{@moves[8]} | #{@moves[9]}\n\n"
-
-    # @board = "\n #{@moves[a]} | #{@moves[b]} | #{@moves[c]} #{border} #{@moves[d]} | #{@moves[e]} | #{@moves[f]} #{border} #{@moves[g]} | #{@moves[h]} | #{@moves[i]}\n\n"
-  end 
-
-  def board
-    @board
-  end
-
-  def border
-    "\n---+---+---\n"
-  end
-end
-
 class GamePlay
   include GameChatter
   include Moves
   include WinningCombos
 
   def initialize
-    @board = TicTacToeBoard.new(@moves, spaces)
     @moves = MOVES
-  end
-
-  def spaces
-
   end
 
   def check_for_winner(player)
@@ -50,19 +22,16 @@ class GamePlay
   end
 
   def player_turns
-    # binding.pry
     turn_counter = 0
 
     while turn_counter < 9
       if turn_counter.even?
         player_one_turn
         puts MOVES
-        puts print_board
         sleep (0.5)
       else
         player_two_turn
         puts MOVES
-        puts print_board
         sleep (0.5)
       end
       turn_counter += 1
@@ -125,17 +94,9 @@ class GamePlay
   
   def update_moves_player_one(moves)
     MOVES[choice] = "X"
-
-    puts @board
   end
 
-  def print_board
-    puts @board.board
-  end
 end
 
 game = GamePlay.new
-puts game.print_board()
-# puts game::start_game_narration
-# puts game.player_turns
 puts game.start_new_game
