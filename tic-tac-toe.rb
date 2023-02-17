@@ -1,18 +1,18 @@
 require 'pry-byebug'
-# require_relative 'game_chatter'
+require_relative 'player'
 
 module BoardMappings
   BOARD = {
-      1 => 1,
-      2 => 2,
-      3 => 3,
-      4 => 4,
-      5 => 5,
-      6 => 6,
-      7 => 7,
-      8 => 8,
-      9 => 9
-    }
+    1 => 1,
+    2 => 2,
+    3 => 3,
+    4 => 4,
+    5 => 5,
+    6 => 6,
+    7 => 7,
+    8 => 8,
+    9 => 9
+  }
 
   WINNING_COMBOS = [[1, 2, 3], [4, 5, 6], [7, 8, 9],
                     [1, 4, 7], [2, 5, 8], [3, 6, 9], 
@@ -67,7 +67,6 @@ module GameNarration
     sleep (0.5)
     puts "Would you like to play?"
   end
-
 end
 
 class GamePlay
@@ -107,7 +106,6 @@ class GamePlay
 
   def player_turn(player)
     puts "Player #{player}, your move: "
-    # choice = gets.chomp.to_i
     choice = gets.chomp
 
     if available_move?(player, choice)
@@ -136,8 +134,3 @@ class GamePlay
   end
 
 end
-
-
-game = GamePlay.new
-puts game.start_new_game
-# puts game.check_for_winner("X")
