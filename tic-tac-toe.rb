@@ -1,5 +1,4 @@
 require 'pry-byebug'
-require_relative 'player'
 
 module BoardMappings
   BOARD = {
@@ -20,7 +19,6 @@ module BoardMappings
 end
 
 module GameNarration
-
   def start_game_narration
     start_game
     to_play?
@@ -41,8 +39,6 @@ module GameNarration
       to_play?
     end
   end
-
-
 
   def start_game
     print_sleep "Hello! Welcome to Tic Tac Toe. To win, be the first to get 3 in a row. Rows, columns, diagonals - any wins."
