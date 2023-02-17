@@ -1,6 +1,5 @@
 require 'pry-byebug'
 require_relative 'player'
-require_relative 'end_game'
 
 module BoardMappings
   BOARD = {
@@ -24,8 +23,7 @@ module GameNarration
 
   def start_game_narration
     start_game
-    sleep (0.5)
-    return if !to_play?
+    to_play?
   end
 
   def to_play?
@@ -44,19 +42,11 @@ module GameNarration
     end
   end
 
-  def end_game(ending)
-    if ending == "draw"
-      print_sleep "It's a draw!"
-    elsif ending == "winner"
-      print_sleep "Wowza, what a game. Placeholder text, and so on."
-    end
-    print_sleep "Would you like to play again?"
-    to_play?
-  end
+
 
   def start_game
     print_sleep "Hello! Welcome to Tic Tac Toe. To win, be the first to get 3 in a row. Rows, columns, diagonals - any wins."
-    puts "Would you like to play?"
+     "Would you like to play?"
   end
 
   def print_sleep(message)
@@ -69,12 +59,16 @@ class GamePlay
   include GameNarration
   include BoardMappings
 
+  OUTCOMES = {
+    "draw" => "It's a draw!",
+    "winner" => "Wowza, you win - placeholder text and whatnot"
+  }
+
   def initialize
     @board = BOARD
   end
 
   def check_for_winner(player)
-    binding.pry
     spots = []
     @board.each { |spot, pl| spots << spot if pl == player }
 
@@ -92,11 +86,11 @@ class GamePlay
   
   def available_move?(player, choice)
     if !(choice).match?(/[1-9]/)
-      puts "Hm, not sure I understand... Please choose a number, 1 - 9."
+      print_sleep "Hm, not sure I understand... Please choose a number, 1 - 9."
       return false
     else
       return true if @board[choice.to_i] == choice.to_i
-      puts "Ope, that one's already taken. Choose again."
+      print_sleep "Ope, that one's already taken. Choose again."
     end
     false
   end
@@ -115,8 +109,15 @@ class GamePlay
   
   def end_players_turn(player)
     display_board
+
     end_game("winner") if check_for_winner(player) == player
     sleep (0.5)
+  end
+
+  def end_game(ending)
+    print_sleep OUTCOMES[ending].to_s
+    print_sleep "Would you like to play again?"
+    to_play?
   end
 
   def start_new_game
