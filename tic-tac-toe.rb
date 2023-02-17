@@ -1,5 +1,6 @@
 require 'pry-byebug'
 require_relative 'player'
+require_relative 'end_game'
 
 module BoardMappings
   BOARD = {
@@ -28,44 +29,39 @@ module GameNarration
   end
 
   def to_play?
-    answer_lookup = {
-      'y' => 'yes',
-      'n' => 'no'
-    }
-
-    puts "Type 'y' or 'n'."
-    sleep(0.5)
+    print_sleep("Type 'y' or 'n'.")
     answer = gets.chomp
-    response = answer_lookup[answer]
 
-    case response
-    when 'yes'
-      puts "Woohoo! Preparing a new board... 'X' goes first."
-    when 'no'
-      puts "Alrighty - bye then!"
+    case answer
+    when 'y'
+      print_sleep "Woohoo! Preparing a new board... 'X' goes first."
+    when 'n'
+      print_sleep "Alrighty - bye then!"
       exit
     else
-      puts "Hm, not sure I understand... Please type 'y' for 'yes' or 'n' for 'no'."
-      sleep(0.5)
+      print_sleep "Hm, not sure I understand... Please type 'y' for 'yes' or 'n' for 'no'."
       to_play?
     end
   end
 
   def end_game(ending)
     if ending == "draw"
-      puts "It's a draw!"
+      print_sleep "It's a draw!"
     elsif ending == "winner"
-      puts "Wowza, what a game. Placeholder text, and so on."
+      print_sleep "Wowza, what a game. Placeholder text, and so on."
     end
-    sleep(0.5)
-    puts "Would you like to play again?"
+    print_sleep "Would you like to play again?"
     to_play?
   end
 
   def start_game
-    puts "Hello! Welcome to Tic Tac Toe. To win, be the first to get 3 in a row. Rows, columns, diagonals - any wins."
-    sleep (0.5)
+    print_sleep "Hello! Welcome to Tic Tac Toe. To win, be the first to get 3 in a row. Rows, columns, diagonals - any wins."
     puts "Would you like to play?"
+  end
+
+  def print_sleep(message)
+    puts message
+    sleep(0.5)
   end
 end
 
@@ -78,6 +74,7 @@ class GamePlay
   end
 
   def check_for_winner(player)
+    binding.pry
     spots = []
     @board.each { |spot, pl| spots << spot if pl == player }
 
