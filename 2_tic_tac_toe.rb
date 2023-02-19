@@ -34,9 +34,9 @@ class Result
   end
 end
 
-class OtherThing  # not sure what I'll call it quite yet. Thi
+class PlayTicTacToe  # not sure what I'll call it quite yet. Thi
+
   def initialize()
-    # binding.pry
     @board = Board.create
     @player_one = Player.new("X").char
     @player_two = Player.new("O").char
@@ -44,11 +44,62 @@ class OtherThing  # not sure what I'll call it quite yet. Thi
     @outcome_messages = Result.call
   end
 
-  def print_the_thing   # just testing that we're getting those variables from the other class :D
-    binding.pry
-    @outcome_messages.to_s
+  def start_game
+    game_intro
+    want_to_play?
+  end
+
+  def want_to_play?
+    print_sleep ("Type 'y' or 'n'.")
+    answer = gets.chomp
+
+    case answer
+    when 'y'
+      print_sleep "\nWoohoo! Preparing a new board... 'X' goes first. Choose a number, 1 - 9."
+      display_board
+      turn(@player_one)
+    when 'n'
+      print_sleep "\nAlrighty - bye then!"
+      exit
+    else
+      print_sleep "Hm, not sure I understand... Please type 'y' for 'yes' or 'n' for 'no'."
+      want_to_play?
+    end
+  end
+
+  def game_intro
+    print_sleep "Hello! Welcome to Tic Tac Toe. To win, be the first to get 3 in a row. Rows, columns, diagonals - any wins."
+    "Would you like to play?"
+  end
+
+  def turn(player)
+    print_sleep "Player #{player}, your move: "
+    choice = gets.chomp
+
+    @board[choice.to_i] = player
+    turn_changer
+
+
+  end
+
+  def turn_changer
+    turn_counter = 0
+
+    while turn_counter < 9
+      turn_counter.even? ? turn(@player_one) : turn(@player_two) 
+      turn_counter += 1
+    end
+  end
+
+  def display_board
+    border = "\n---+---+---\n"
+    puts "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
+  end
+
+  def print_sleep(message)
+    puts message
+    sleep(0.25)
   end
 end
 
-the_thing = OtherThing.new
-puts the_thing.print_the_thing
+PlayTicTacToe.new.start_game
