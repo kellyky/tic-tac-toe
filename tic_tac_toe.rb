@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 class Board 
   def self.create
     (1..9).each_with_object({}) do |position, grid|
@@ -98,11 +96,6 @@ class PlayTicTacToe
     want_to_play?
   end
 
-  def clear_board
-    @board.each { |place, val| @board[place] = place }
-    @turn_counter = 0
-  end
-
   def check_outcome(player)
     end_game("winner") if winner?(player) 
     end_game("draw") if @turn_counter == 9
@@ -113,8 +106,7 @@ class PlayTicTacToe
   end
 
   def current_players_spots(player)
-    spots = []
-    @board.each { |spot, place| spots << spot if place == player }
+    spots = @board.map{ |spot, place|  spot if place == player }
 
     @winning_combos.map { |combo| return player if (combo - spots).empty? }
   end
@@ -133,6 +125,11 @@ class PlayTicTacToe
   def display_board
     border = "\n---+---+---\n"
     puts "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
+  end
+
+  def clear_board
+    @board.each { |place, val| @board[place] = place }
+    @turn_counter = 0
   end
 
   def print_sleep(message)
