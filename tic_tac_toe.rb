@@ -34,7 +34,7 @@ class Result
   end
 end
 
-class PlayTicTacToe  # not sure what I'll call it quite yet. Thi
+class PlayTicTacToe 
 
   def initialize()
     @board = Board.create
@@ -42,11 +42,14 @@ class PlayTicTacToe  # not sure what I'll call it quite yet. Thi
     @player_two = Player.new("O").char
     @winning_combos = WinningCombos.call 
     @outcome_messages = Result.call
+    @turn_counter = 0
   end
 
-  def start_game
+  def play
     game_intro
     want_to_play?
+    display_board
+    turn(@player_one)
   end
 
   def want_to_play?
@@ -56,8 +59,6 @@ class PlayTicTacToe  # not sure what I'll call it quite yet. Thi
     case answer
     when 'y'
       print_sleep "\nWoohoo! Preparing a new board... 'X' goes first. Choose a number, 1 - 9."
-      display_board
-      turn(@player_one)
     when 'n'
       print_sleep "\nAlrighty - bye then!"
       exit
@@ -73,22 +74,60 @@ class PlayTicTacToe  # not sure what I'll call it quite yet. Thi
   end
 
   def turn(player)
+    @turn_counter += 1
+    other_player = player == @player_one ? @player_two : @player_one
+
     print_sleep "Player #{player}, your move: "
     choice = gets.chomp
 
-    @board[choice.to_i] = player
-    turn_changer
+    if available_move?(player, choice)
+      @board[choice.to_i] = player
+      display_board
+      check_outcome(player)
+    else
+      turn(player)
+    end
 
-
+    turn(other_player)
   end
 
-  def turn_changer
-    turn_counter = 0
+  def end_game(outcome)
+    print_sleep @outcome_messages[outcome].to_s
+    print_sleep "Would you like to play_again? "
+    clear_board
+    want_to_play?
+  end
 
-    while turn_counter < 9
-      turn_counter.even? ? turn(@player_one) : turn(@player_two) 
-      turn_counter += 1
+  def clear_board
+    @board.each { |place, val| @board[place] = place }
+    @turn_counter = 0
+  end
+
+  def check_outcome(player)
+    end_game("winner") if winner?(player) 
+    end_game("draw") if @turn_counter == 9
+  end
+
+  def winner?(player)  
+    current_players_spots(player) == player
+  end
+
+  def current_players_spots(player)
+    spots = []
+    @board.each { |spot, place| spots << spot if place == player }
+
+    @winning_combos.map { |combo| return player if (combo - spots).empty? }
+  end
+
+  def available_move?(player, choice)
+    return true if @board[choice.to_i] == choice.to_i
+
+    if !choice.match?(/[1-9]/)
+      print_sleep "Hm... not sure I understand. Please choose a number, 1 - 9."
+    else
+      print_sleep "Ope, that one's already taken. Choose again."
     end
+    false
   end
 
   def display_board
@@ -102,4 +141,4 @@ class PlayTicTacToe  # not sure what I'll call it quite yet. Thi
   end
 end
 
-PlayTicTacToe.new.start_game
+PlayTicTacToe.new.play
