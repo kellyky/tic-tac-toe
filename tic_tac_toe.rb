@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 class Board 
   def self.create
     (1..9).each_with_object({}) do |position, grid|
@@ -23,11 +25,12 @@ class WinningCombos
 end
 
 class Result
+  # Probably just put this in the actual play tic tac toe class
   def self.call
     {
       "loss" => "Loss - placeholder.",
       "draw" => "It's a draw!", 
-      "winner" => "Wowza, you win - congratulations and whatnot!"
+      "winner" => "We have a winner!!!!"
     }
   end
 end
@@ -40,6 +43,7 @@ class PlayTicTacToe
     @player_two = Player.new("O").char
     @winning_combos = WinningCombos.call 
     @outcome_messages = Result.call
+    @computer_player = false
     @turn_counter = 0
   end
 
@@ -56,13 +60,36 @@ class PlayTicTacToe
 
     case answer
     when 'y'
-      print_sleep "\nWoohoo! Preparing a new board... 'X' goes first. Choose a number, 1 - 9."
+      print_sleep "\nWoohoo!" 
+      how_many_players
+      print_sleep "Preparing a new board... 'X' goes first. Choose a number, 1 - 9."
     when 'n'
       print_sleep "\nAlrighty - bye then!"
       exit
     else
       print_sleep "Hm, not sure I understand... Please type 'y' for 'yes' or 'n' for 'no'."
       want_to_play?
+    end
+  end
+
+  def how_many_players
+    print_sleep "How many players? Select 1 to play the computer and 2 to play a friend."
+    answer = gets.chomp.to_i
+
+    case answer
+    when 1
+      @computer_player = true
+      print_sleep "Ooh, you DARE play the computer? So be it. But you've been warned..."
+      # sleep(1)
+      print_sleep "So be it. But you've been warned..."
+      # sleep(1)
+      print_sleep "Anywho: you'll be 'X' and I, the computer, will be 'O'."
+      print_sleep "It'll be fun - let's go!"
+    when 2
+      print_sleep "Preparing a new board... 'X' goes first. Choose a number, 1 - 9."
+    else
+      print_sleep "Hm, not sure I understand... Please choose 1 to play the computer or 2 to play a friend - or yourself."
+      how_many_players
     end
   end
 
@@ -75,7 +102,7 @@ class PlayTicTacToe
     @turn_counter += 1
     other_player = player == @player_one ? @player_two : @player_one
 
-    print_sleep "Player #{player}, your move: "
+    print_sleep "Player #{player}, your move: \n"
     choice = gets.chomp
 
     if available_move?(player, choice)
@@ -86,7 +113,17 @@ class PlayTicTacToe
       turn(player)
     end
 
-    turn(other_player)
+    @computer_player ? computer_turn : turn(other_player)
+    # turn(other_player)
+  end
+
+  def computer_turn
+    computers_move = list_available_moves.sample 
+    print_sleep "Player #{@player_two}, your move: #{computers_move}\n"
+    @board[computers_move] = @player_two
+    display_board
+    check_outcome(@player_two)
+    turn(@player_one)
   end
 
   def end_game(outcome)
@@ -109,6 +146,11 @@ class PlayTicTacToe
     spots = @board.map{ |spot, place|  spot if place == player }
 
     @winning_combos.map { |combo| return player if (combo - spots).empty? }
+  end
+
+  def list_available_moves
+    # binding.pry
+    @board.values.select{ |v| v.is_a? Integer }
   end
 
   def available_move?(player, choice)
