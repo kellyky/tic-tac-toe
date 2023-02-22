@@ -114,15 +114,17 @@ class PlayTicTacToe
     end
 
     @computer_player ? computer_turn : turn(other_player)
-    # turn(other_player)
   end
 
   def computer_turn
+    current_players_spots(@player_one)
+    binding.pry
+
     computers_move = list_available_moves.sample 
     print_sleep "Player #{@player_two}, your move: #{computers_move}\n"
     @board[computers_move] = @player_two
-    display_board
     check_outcome(@player_two)
+    display_board
     turn(@player_one)
   end
 
@@ -144,13 +146,16 @@ class PlayTicTacToe
 
   def current_players_spots(player)
     spots = @board.map{ |spot, place|  spot if place == player }
-
+  
     @winning_combos.map { |combo| return player if (combo - spots).empty? }
   end
 
   def list_available_moves
-    # binding.pry
-    @board.values.select{ |v| v.is_a? Integer }
+    available_spaces = @board.values.select{ |v| v.is_a? Integer }
+
+    spots = @board.map{ |spot, place|  spot if place == @player_one }.compact
+    p1_winning_moves = @winning_combos.map{ |combo| (combo - spots) if (combo - spots).length == 1 }.compact.flatten
+    available_spaces & p1_winning_moves
   end
 
   def available_move?(player, choice)
