@@ -50,19 +50,20 @@ class PlayTicTacToe
   def play
     game_intro
     want_to_play?
-    display_board
+    print_sleep display_board
     turn(@player_one)
   end
 
   def want_to_play?
-    print_sleep ("Type 'y' or 'n'.")
+    print ("Type 'y' or 'n'.")
+    sleep 0.5
+    # print_sleep ("Type 'y' or 'n'.")
     answer = gets.chomp
 
     case answer
     when 'y'
       print_sleep "\nWoohoo!" 
       how_many_players
-      print_sleep "Preparing a new board... 'X' goes first. Choose a number, 1 - 9."
     when 'n'
       print_sleep "\nAlrighty - bye then!"
       exit
@@ -107,7 +108,7 @@ class PlayTicTacToe
 
     if available_move?(player, choice)
       @board[choice.to_i] = player
-      display_board
+      print_sleep display_board
       check_outcome(player)
     else
       turn(player)
@@ -117,14 +118,15 @@ class PlayTicTacToe
   end
 
   def computer_turn
-    current_players_spots(@player_one)
-    binding.pry
+    move = suggested_computer_moves.sample
+    # @board[suggested_computer_moves.sample] = @player_two
+    @board[move] = @player_two
 
-    computers_move = list_available_moves.sample 
-    print_sleep "Player #{@player_two}, your move: #{computers_move}\n"
-    @board[computers_move] = @player_two
+    print_sleep "Player #{@player_two}, your move: "
+    print_sleep display_board
+    print_sleep "Hal chose #{move}"
+
     check_outcome(@player_two)
-    display_board
     turn(@player_one)
   end
 
@@ -145,17 +147,32 @@ class PlayTicTacToe
   end
 
   def current_players_spots(player)
+    # binding.pry
     spots = @board.map{ |spot, place|  spot if place == player }
   
     @winning_combos.map { |combo| return player if (combo - spots).empty? }
   end
 
-  def list_available_moves
-    available_spaces = @board.values.select{ |v| v.is_a? Integer }
+  def suggested_computer_moves
+    binding.pry
+    available = @board.values.select{ |v| v.is_a? Integer }
 
-    spots = @board.map{ |spot, place|  spot if place == @player_one }.compact
-    p1_winning_moves = @winning_combos.map{ |combo| (combo - spots) if (combo - spots).length == 1 }.compact.flatten
-    available_spaces & p1_winning_moves
+    # defense: blocks player 1
+    player_ones_spots = @board.map{ |spot, place|  spot if place == @player_one }.compact
+    p1_winning_moves = @winning_combos.select{ |combo| (combo - player_ones_spots).length == 1 }.compact.flatten #- player_ones_spots
+
+
+    # offense: can the computer (as player 2) win?
+    player_twos_spots = @board.map{ |spot, place|  spot if place == @player_two }.compact
+    p2_winning_moves = @winning_combos.select{ |combo| (combo - player_twos_spots).length == 1 }.compact.flatten
+
+    if !p2_winning_moves.empty? 
+      return p2_winning_moves &= available
+    elsif p1_winning_moves.empty?
+      return available
+    else
+      return p1_winning_moves
+    end
   end
 
   def available_move?(player, choice)
@@ -170,8 +187,9 @@ class PlayTicTacToe
   end
 
   def display_board
+    # binding.pry
     border = "\n---+---+---\n"
-    puts "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
+    "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
   end
 
   def clear_board
@@ -180,7 +198,7 @@ class PlayTicTacToe
   end
 
   def print_sleep(message)
-    puts message
+    puts "#{message}\n"
     sleep(0.25)
   end
 end
