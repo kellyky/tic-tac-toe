@@ -218,9 +218,9 @@ class PlayTicTacToe
     @computer_player = false 
   end
 
-  def print_sleep(message)
+  def print_sleep(message, duration=0.65)
     puts "#{message}\n"
-    sleep(0.65)
+    sleep(duration)
   end
 end
 
