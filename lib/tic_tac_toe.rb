@@ -167,7 +167,6 @@ class PlayTicTacToe
   end
 
   def player_one_winning_moves
-    # binding.pry
     # return [] if player_one_occupies.empty?
     return [] if player_one_occupies.nil? || player_one_occupies.empty?
     moves = @winning_combos.select{ |combo| (combo - player_one_occupies).length == 1 }.compact.flatten
@@ -175,7 +174,6 @@ class PlayTicTacToe
   end
 
   def player_two_winning_moves
-    # binding.pry
     # return [] if player_two_occupies.empty?
     return [] if player_two_occupies.nil? || player_two_occupies.empty?
     moves = @winning_combos.select{ |combo| (combo - player_two_occupies).length == 1 }.compact.flatten
@@ -183,8 +181,6 @@ class PlayTicTacToe
   end
 
   def suggested_computer_moves
-    # binding.pry
-
     case
     when player_two_winning_moves.any?
       player_two_winning_moves
@@ -207,7 +203,6 @@ class PlayTicTacToe
   end
 
   def display_board
-    # binding.pry
     border = "\n---+---+---\n"
     "\n #{@board[1]} | #{@board[2]} | #{@board[3]} #{border} #{@board[4]} | #{@board[5]} | #{@board[6]} #{border} #{@board[7]} | #{@board[8]} | #{@board[9]}\n\n"
   end
@@ -224,4 +219,4 @@ class PlayTicTacToe
   end
 end
 
-# PlayTicTacToe.new.play
+PlayTicTacToe.new.play
