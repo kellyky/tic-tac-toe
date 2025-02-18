@@ -1,6 +1,4 @@
-require 'pry-byebug'
-
-class Board 
+class Board
   def self.create
     (1..9).each_with_object({}) do |position, grid|
       grid[position] = position
@@ -219,4 +217,3 @@ class PlayTicTacToe
   end
 end
 
-PlayTicTacToe.new.play
