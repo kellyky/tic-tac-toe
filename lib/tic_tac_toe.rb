@@ -66,6 +66,7 @@ class PlayTicTacToe
 
     case answer
     when 'y'
+      print_sleep "Woohoo!"
       how_many_players
     when 'n'
       print_sleep "\nAlrighty - bye then!"
@@ -77,7 +78,7 @@ class PlayTicTacToe
   end
 
   def how_many_players
-    print_sleep "Woohoo! But first... How many players?" 
+    print_sleep "How many players?"
     print "Select '1' to play the computer and '2' to play a friend. "
     sleep 0.5
     answer = gets.chomp.to_i
@@ -96,8 +97,8 @@ class PlayTicTacToe
   end
 
   def game_intro
-    print_sleep "\nHello! Welcome to Tic Tac Toe. To win, be the first to get 3 in a row."
-    print_sleep "Rows, columns, diagonals - any wins. Would you like to play?"
+    print_sleep "Hello! Welcome to Tic Tac Toe. To win, be the first to get 3 in a row."
+    print_sleep 'Rows, columns, diagonals - any wins.'
   end
 
   def turn(player)
@@ -215,5 +216,24 @@ class PlayTicTacToe
     puts "#{message}\n"
     sleep(duration)
   end
+
+  public
+
+  attr_reader :player_one,
+              :player_two,
+              :board,
+              :winning_combos,
+              :outcome_messages
+
+  attr_writer :computer_player,
+              :turn_counter
+
+  def play
+    game_intro
+    how_many_players
+    print_sleep display_board
+    turn(player_one)
+  end
+
 end
 
