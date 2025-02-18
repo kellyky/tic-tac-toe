@@ -33,7 +33,6 @@ describe PlayTicTacToe do
   describe '.initialize' do
     # it { expect(@board).to_receive(::Board.create) }
     it '...' do
-      binding.pry
         expect(@board).should_receive(::Board.create) 
       # What to even test here
     end
@@ -132,7 +131,6 @@ describe PlayTicTacToe do
 
   describe '#clear_board' do
     it '...' do
-      binding.pry
     end
   end
 
